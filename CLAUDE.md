@@ -24,10 +24,25 @@ Environment variables (set via `.claude/settings.json` `env` field or shell):
 
 Always bump the plugin version in `.claude-plugin/plugin.json` when making changes. Use semver: patch for fixes, minor for features, major for breaking changes.
 
+## Development Constraints
+
+- stdlib only (fs, path) -- no npm dependencies in hook code.
+- Frontmatter parser is minimal: expects `---\n` at byte 0, supports inline values, quoted strings, and block scalars (`|`, `>`). Not a full YAML parser.
+
 ## Commands
 
 Prefer relative paths over absolute paths when executing commands with path arguments.
 
 ## Testing
 
-Test the hook locally: `CLAUDE_PROJECT_DIR=<project-with-docs> node hooks/load-docs.js`
+Test the hook locally:
+
+```sh
+CLAUDE_PROJECT_DIR=<project-with-docs> node hooks/load-docs.js
+```
+
+Disabled:
+
+```sh
+CLAUDE_MICRODOC_DISABLED=1 CLAUDE_PROJECT_DIR=<project-with-docs> node hooks/load-docs.js
+```

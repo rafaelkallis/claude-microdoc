@@ -17,22 +17,22 @@ At session start, the plugin scans your docs, extracts short descriptions from f
 
 ```xml
 <project-docs>
-<instructions>
-Project documentation is available as markdown files with YAML frontmatter descriptions.
-Consult relevant docs before making architectural suggestions or implementation decisions.
-When a doc's description overlaps with the current task, use Read to load its full content before proceeding.
-</instructions>
+  <instructions>
+    Project documentation is available as markdown files with YAML frontmatter descriptions.
+    Consult relevant docs before making architectural suggestions or implementation decisions.
+    When a doc's description overlaps with the current task, use Read to load its full content before proceeding.
+  </instructions>
 
-<docs>
-<doc>
-<path>docs/architecture/parsing.md</path>
-<description>Document parsing. Chose Docling for PDF/DOCX. Plain read for txt/md.</description>
-</doc>
-<doc>
-<path>docs/deployment/staging.md</path>
-<description>Staging environment. Docker Compose on EC2. Auto-deploy from main branch.</description>
-</doc>
-</docs>
+  <docs>
+    <doc>
+      <path>docs/architecture/parsing.md</path>
+      <description>Document parsing. Chose Docling for PDF/DOCX. Plain read for txt/md.</description>
+    </doc>
+    <doc>
+      <path>docs/deployment/staging.md</path>
+      <description>Staging environment. Docker Compose on EC2. Auto-deploy from main branch.</description>
+    </doc>
+  </docs>
 </project-docs>
 ```
 
