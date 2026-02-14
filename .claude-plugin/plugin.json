@@ -1,0 +1,11 @@
+{
+  "name": "claude-microdoc",
+  "version": "0.1.0",
+  "description": "Injects concise doc summaries into Claude Code sessions. Scans docs/ for markdown files with YAML frontmatter descriptions and provides a skill for writing token-efficient descriptions.",
+  "author": {
+    "name": "Rafael Kallis",
+    "url": "https://github.com/rafaelkallis"
+  },
+  "repository": "https://github.com/rafaelkallis/claude-microdoc",
+  "license": "MIT"
+}
