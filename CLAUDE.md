@@ -8,7 +8,7 @@ A SessionStart hook scans for doc files matching a configurable glob pattern (de
 
 ## Architecture
 
-- `plugins/microdoc/hooks/load-docs.js` -- Node.js script (stdlib only, no dependencies). Glob-matches doc files under `CLAUDE_PROJECT_DIR`, parses frontmatter, XML-escapes descriptions, outputs `<project-docs>` XML to stdout.
+- `plugins/microdoc/hooks/load-docs.js` -- Node.js script (stdlib only, no dependencies). Glob-matches doc files under `CLAUDE_PROJECT_DIR`, parses frontmatter, XML-escapes descriptions, outputs `<microdoc>` XML to stdout.
 - `plugins/microdoc/hooks/hooks.json` -- Registers load-docs.js as a SessionStart hook via `${CLAUDE_PLUGIN_ROOT}`.
 - `plugins/microdoc/skills/doc-development/SKILL.md` -- Skill for writing and maintaining doc descriptions (15-20 word topic indexes, not prose summaries).
 - `plugins/microdoc/.claude-plugin/plugin.json` -- Plugin manifest.

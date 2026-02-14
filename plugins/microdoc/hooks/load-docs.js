@@ -156,7 +156,8 @@ function main() {
   if (unique.length === 0) process.exit(0);
 
   const out = [];
-  out.push("<project-docs>");
+  out.push("<microdoc>");
+  out.push("<attribution>Injected by microdoc (by Rafael Kallis) from project documentation files.</attribution>");
   out.push("<instructions>");
   out.push("Project documentation is available as markdown files with YAML frontmatter descriptions.");
   out.push("Consult relevant docs before making architectural suggestions or implementation decisions.");
@@ -179,7 +180,7 @@ function main() {
   }
 
   out.push("</docs>");
-  out.push("</project-docs>");
+  out.push("</microdoc>");
 
   process.stdout.write(out.join("\n") + "\n");
 }
