@@ -1,7 +1,6 @@
 ---
-name: init
-description: Initialize microdoc in the current project. Creates docs/ directory, seeds an overview doc, and backfills missing frontmatter descriptions.
-disable-model-invocation: true
+name: microdoc-init
+description: This skill should be used when the user asks to "initialize microdoc", "set up microdoc", "set up docs", "initialize docs", "backfill descriptions", "add descriptions to docs", "seed docs directory", or wants to bootstrap microdoc in a project.
 ---
 
 # microdoc init

@@ -11,6 +11,7 @@ A SessionStart hook scans for doc files matching a configurable glob pattern (de
 - `plugins/microdoc/hooks/microdoc.js` -- Node.js script (stdlib only, no dependencies). Glob-matches doc files under `CLAUDE_PROJECT_DIR`, parses frontmatter, XML-escapes descriptions, outputs `<microdoc>` XML to stdout.
 - `plugins/microdoc/hooks/hooks.json` -- Registers microdoc.js as a SessionStart hook via `${CLAUDE_PLUGIN_ROOT}`.
 - `plugins/microdoc/skills/microdoc-development/SKILL.md` -- Skill for writing and maintaining doc descriptions (15-20 word topic indexes, not prose summaries).
+- `plugins/microdoc/skills/microdoc-init/SKILL.md` -- Skill for initializing microdoc in a project (creates docs directory, seeds overview doc, backfills missing descriptions).
 - `plugins/microdoc/.claude-plugin/plugin.json` -- Plugin manifest.
 - `.claude-plugin/marketplace.json` -- Marketplace manifest.
 - `plugins/microdoc/test/` -- Unit and integration tests using `node:test` (no dependencies).
