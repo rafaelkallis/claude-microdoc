@@ -81,7 +81,7 @@ description: Document parsing. Chose Docling for PDF/DOCX. Plain read for txt/md
 ---
 ```
 
-The plugin includes a `Doc Development` skill with full guidance on writing and maintaining descriptions. Invoke it with `/doc-development` or let Claude use it automatically when working with docs.
+The plugin includes a `Microdoc Development` skill with full guidance on writing and maintaining descriptions. Invoke it with `/microdoc-development` or let Claude use it automatically when working with docs.
 
 ## License
 

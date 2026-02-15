@@ -10,9 +10,11 @@ A SessionStart hook scans for doc files matching a configurable glob pattern (de
 
 - `plugins/microdoc/hooks/microdoc.js` -- Node.js script (stdlib only, no dependencies). Glob-matches doc files under `CLAUDE_PROJECT_DIR`, parses frontmatter, XML-escapes descriptions, outputs `<microdoc>` XML to stdout.
 - `plugins/microdoc/hooks/hooks.json` -- Registers microdoc.js as a SessionStart hook via `${CLAUDE_PLUGIN_ROOT}`.
-- `plugins/microdoc/skills/doc-development/SKILL.md` -- Skill for writing and maintaining doc descriptions (15-20 word topic indexes, not prose summaries).
+- `plugins/microdoc/skills/microdoc-development/SKILL.md` -- Skill for writing and maintaining doc descriptions (15-20 word topic indexes, not prose summaries).
 - `plugins/microdoc/.claude-plugin/plugin.json` -- Plugin manifest.
 - `.claude-plugin/marketplace.json` -- Marketplace manifest.
+- `plugins/microdoc/test/` -- Unit and integration tests using `node:test` (no dependencies).
+- `.github/workflows/test.yml` -- CI workflow running tests on Node 18/20/22.
 
 ## Configuration
 
@@ -27,7 +29,8 @@ Always bump the plugin version in `plugins/microdoc/.claude-plugin/plugin.json` 
 
 ## Development Constraints
 
-- stdlib only (fs, path) -- no npm dependencies in hook code.
+- stdlib only (fs, path, child_process) -- no npm dependencies in hook code.
+- File discovery uses `git ls-files` when available, falls back to `readdirRecursive` with hardcoded `SKIP_DIRS` for non-git projects.
 - Frontmatter parser is minimal: expects `---\n` at byte 0, supports inline values, quoted strings, and block scalars (`|`, `>`). Not a full YAML parser.
 
 ## Commands
@@ -35,6 +38,12 @@ Always bump the plugin version in `plugins/microdoc/.claude-plugin/plugin.json` 
 Prefer relative paths over absolute paths when executing commands with path arguments.
 
 ## Testing
+
+Run the full test suite:
+
+```sh
+node --test
+```
 
 Test the hook locally:
 

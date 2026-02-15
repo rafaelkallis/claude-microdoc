@@ -1,7 +1,6 @@
 ---
-name: Doc Development
+name: microdoc-development
 description: This skill should be used when the user asks to "create a doc", "add a new doc", "write a design record", "add a design decision", "update a doc", "update doc description", "document a decision", or needs guidance on writing concise frontmatter descriptions for docs/.
-version: 0.1.0
 ---
 
 # Doc Development
