@@ -1,6 +1,6 @@
 {
   "name": "microdoc",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "description": "Injects concise doc summaries into Claude Code sessions. Scans docs/ for markdown files with YAML frontmatter descriptions and provides a skill for writing token-efficient descriptions.",
   "author": {
     "name": "Rafael Kallis",

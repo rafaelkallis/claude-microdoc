@@ -2,14 +2,18 @@
 
 const fs = require("fs");
 const path = require("path");
+const { execFileSync } = require("child_process");
 
 function xmlEscape(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+const SKIP_DIRS = new Set([".git", "node_modules", ".next", ".nuxt", "dist", "build", ".turbo", ".cache"]);
+
 function readdirRecursive(dir) {
   const results = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (SKIP_DIRS.has(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       results.push(...readdirRecursive(full));
@@ -18,6 +22,14 @@ function readdirRecursive(dir) {
     }
   }
   return results;
+}
+
+function listFilesGit(projectDir) {
+  const output = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard"], {
+    cwd: projectDir,
+    encoding: "utf-8",
+  });
+  return output.split("\n").filter(Boolean);
 }
 
 function globToRegex(pattern) {
@@ -132,27 +144,28 @@ function main() {
   const patterns = splitGlobs(globStr).filter(Boolean);
   const regexes = patterns.map(globToRegex);
 
-  // Collect unique static prefixes to avoid scanning the entire project tree
   const prefixes = [...new Set(patterns.map(extractStaticPrefix))];
 
-  const files = [];
-  for (const prefix of prefixes) {
-    const dir = path.join(projectDir, prefix);
-    try {
-      if (!fs.statSync(dir).isDirectory()) continue;
-    } catch {
-      continue;
-    }
-    for (const abs of readdirRecursive(dir)) {
-      const rel = path.relative(projectDir, abs);
-      if (regexes.some((re) => re.test(rel))) {
-        files.push(rel);
+  let allFiles;
+  try {
+    allFiles = listFilesGit(projectDir);
+  } catch {
+    // Not a git repo or git not installed -- fall back to filesystem scan
+    allFiles = [];
+    for (const prefix of prefixes) {
+      const dir = path.join(projectDir, prefix);
+      try {
+        if (!fs.statSync(dir).isDirectory()) continue;
+      } catch {
+        continue;
+      }
+      for (const abs of readdirRecursive(dir)) {
+        allFiles.push(path.relative(projectDir, abs));
       }
     }
   }
 
-  // Deduplicate (overlapping prefixes) and sort
-  const unique = [...new Set(files)].sort();
+  const unique = [...new Set(allFiles.filter((rel) => regexes.some((re) => re.test(rel))))].sort();
   if (unique.length === 0) process.exit(0);
 
   const out = [];
@@ -185,4 +198,17 @@ function main() {
   process.stdout.write(out.join("\n") + "\n");
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  xmlEscape,
+  SKIP_DIRS,
+  readdirRecursive,
+  listFilesGit,
+  globToRegex,
+  splitGlobs,
+  extractStaticPrefix,
+  extractDescription,
+};
