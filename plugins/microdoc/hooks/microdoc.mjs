@@ -1,20 +1,19 @@
-"use strict";
+import fs from "node:fs";
+import path from "node:path";
+import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-const fs = require("fs");
-const path = require("path");
-const { execFileSync } = require("child_process");
-
-function xmlEscape(text) {
+export function xmlEscape(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function xmlEscapeAttr(text) {
+export function xmlEscapeAttr(text) {
   return xmlEscape(text).replace(/"/g, "&quot;");
 }
 
-const SKIP_DIRS = new Set([".git", "node_modules", ".next", ".nuxt", "dist", "build", ".turbo", ".cache"]);
+export const SKIP_DIRS = new Set([".git", "node_modules", ".next", ".nuxt", "dist", "build", ".turbo", ".cache"]);
 
-function readdirRecursive(dir) {
+export function readdirRecursive(dir) {
   const results = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (SKIP_DIRS.has(entry.name)) continue;
@@ -28,7 +27,7 @@ function readdirRecursive(dir) {
   return results;
 }
 
-function listFilesGit(projectDir) {
+export function listFilesGit(projectDir) {
   const output = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard"], {
     cwd: projectDir,
     encoding: "utf-8",
@@ -36,7 +35,7 @@ function listFilesGit(projectDir) {
   return output.split("\n").filter(Boolean);
 }
 
-function globToRegex(pattern) {
+export function globToRegex(pattern) {
   let re = "";
   for (let i = 0; i < pattern.length; i++) {
     const ch = pattern[i];
@@ -62,7 +61,7 @@ function globToRegex(pattern) {
   return new RegExp("^" + re + "$");
 }
 
-function splitGlobs(str) {
+export function splitGlobs(str) {
   const patterns = [];
   let current = "";
   let depth = 0;
@@ -80,7 +79,7 @@ function splitGlobs(str) {
   return patterns;
 }
 
-function extractStaticPrefix(pattern) {
+export function extractStaticPrefix(pattern) {
   let prefix = "";
   for (const ch of pattern) {
     if ("*?{[".includes(ch)) break;
@@ -90,7 +89,7 @@ function extractStaticPrefix(pattern) {
   return lastSlash === -1 ? "" : prefix.slice(0, lastSlash);
 }
 
-function extractDescription(content) {
+export function extractDescription(content) {
   if (!content.startsWith("---\n")) return null;
   const end = content.indexOf("\n---", 4);
   if (end === -1) return null;
@@ -199,18 +198,6 @@ function main() {
   process.stdout.write(out.join("\n") + "\n");
 }
 
-if (require.main === module) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main();
 }
-
-module.exports = {
-  xmlEscape,
-  xmlEscapeAttr,
-  SKIP_DIRS,
-  readdirRecursive,
-  listFilesGit,
-  globToRegex,
-  splitGlobs,
-  extractStaticPrefix,
-  extractDescription,
-};

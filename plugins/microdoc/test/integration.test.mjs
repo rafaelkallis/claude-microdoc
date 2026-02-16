@@ -1,13 +1,11 @@
-"use strict";
+import { describe, it, before, after } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+import os from "node:os";
+import { execFileSync } from "node:child_process";
 
-const { describe, it, before, after } = require("node:test");
-const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const path = require("node:path");
-const os = require("node:os");
-const { execFileSync } = require("node:child_process");
-
-const SCRIPT = path.resolve(__dirname, "../hooks/microdoc.js");
+const SCRIPT = path.resolve(import.meta.dirname, "../hooks/microdoc.mjs");
 
 describe("integration", () => {
   let tmpDir;
