@@ -8,6 +8,7 @@ const os = require("node:os");
 
 const {
   xmlEscape,
+  xmlEscapeAttr,
   SKIP_DIRS,
   readdirRecursive,
   globToRegex,
@@ -39,6 +40,24 @@ describe("xmlEscape", () => {
 
   it("handles empty string", () => {
     assert.equal(xmlEscape(""), "");
+  });
+});
+
+describe("xmlEscapeAttr", () => {
+  it("escapes double quotes", () => {
+    assert.equal(xmlEscapeAttr('a "b" c'), "a &quot;b&quot; c");
+  });
+
+  it("escapes quotes combined with XML special characters", () => {
+    assert.equal(xmlEscapeAttr('<a "b">&c'), "&lt;a &quot;b&quot;&gt;&amp;c");
+  });
+
+  it("returns unchanged string with no special chars", () => {
+    assert.equal(xmlEscapeAttr("hello world"), "hello world");
+  });
+
+  it("handles empty string", () => {
+    assert.equal(xmlEscapeAttr(""), "");
   });
 });
 

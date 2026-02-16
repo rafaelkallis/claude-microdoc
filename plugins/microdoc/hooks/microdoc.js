@@ -8,6 +8,10 @@ function xmlEscape(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+function xmlEscapeAttr(text) {
+  return xmlEscape(text).replace(/"/g, "&quot;");
+}
+
 const SKIP_DIRS = new Set([".git", "node_modules", ".next", ".nuxt", "dist", "build", ".turbo", ".cache"]);
 
 function readdirRecursive(dir) {
@@ -169,14 +173,12 @@ function main() {
   if (unique.length === 0) process.exit(0);
 
   const out = [];
-  out.push("<microdoc>");
-  out.push("<attribution>Injected by microdoc (by Rafael Kallis) from project documentation files.</attribution>");
+  out.push('<microdoc source="microdoc plugin by Rafael Kallis">');
   out.push("<instructions>");
-  out.push("Project documentation is available as markdown files with YAML frontmatter descriptions.");
-  out.push("Consult relevant docs before making architectural suggestions or implementation decisions.");
-  out.push("When a doc's description overlaps with the current task, use Read to load its full content before proceeding.");
+  out.push("Markdown docs with YAML frontmatter descriptions are indexed below.");
+  out.push("Consult relevant docs before making architectural or implementation decisions.");
+  out.push("When a description overlaps with the current task, Read the full doc before proceeding.");
   out.push("</instructions>");
-  out.push("");
   out.push("<docs>");
 
   for (const rel of unique) {
@@ -184,12 +186,11 @@ function main() {
     const content = fs.readFileSync(filePath, "utf-8");
     const desc = extractDescription(content);
 
-    out.push("<doc>");
-    out.push(`<path>${rel}</path>`);
-    out.push("<description>");
-    out.push(desc ? xmlEscape(desc) : "(no description)");
-    out.push("</description>");
-    out.push("</doc>");
+    if (desc) {
+      out.push(`<doc path="${xmlEscapeAttr(rel)}">${xmlEscape(desc)}</doc>`);
+    } else {
+      out.push(`<doc path="${xmlEscapeAttr(rel)}"/>`);
+    }
   }
 
   out.push("</docs>");
@@ -204,6 +205,7 @@ if (require.main === module) {
 
 module.exports = {
   xmlEscape,
+  xmlEscapeAttr,
   SKIP_DIRS,
   readdirRecursive,
   listFilesGit,

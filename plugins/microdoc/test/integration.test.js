@@ -42,10 +42,10 @@ describe("integration", () => {
     );
 
     const out = runScript({ CLAUDE_PROJECT_DIR: tmpDir });
-    assert.ok(out.includes("<microdoc>"));
+    assert.ok(out.includes('<microdoc source="microdoc plugin by Rafael Kallis">'));
     assert.ok(out.includes("</microdoc>"));
-    assert.ok(out.includes("<path>docs/api.md</path>"));
-    assert.ok(out.includes("<path>docs/arch.md</path>"));
+    assert.ok(out.includes('path="docs/api.md"'));
+    assert.ok(out.includes('path="docs/arch.md"'));
     assert.ok(out.includes("REST API endpoints"));
     assert.ok(out.includes("Architecture overview"));
   });
@@ -73,7 +73,7 @@ describe("integration", () => {
       CLAUDE_PROJECT_DIR: tmpDir,
       CLAUDE_MICRODOC_GLOB: "custom/**/*.txt",
     });
-    assert.ok(out.includes("<path>custom/notes.txt</path>"));
+    assert.ok(out.includes('path="custom/notes.txt"'));
     assert.ok(out.includes("Custom notes"));
   });
 
@@ -88,12 +88,12 @@ describe("integration", () => {
     }
   });
 
-  it("shows (no description) for file without description", () => {
+  it("uses self-closing tag for file without description", () => {
     writeDoc("docs/no-desc.md", "---\ntitle: No Desc\n---\n# Body");
 
     const out = runScript({ CLAUDE_PROJECT_DIR: tmpDir });
-    assert.ok(out.includes("<path>docs/no-desc.md</path>"));
-    assert.ok(out.includes("(no description)"));
+    assert.ok(out.includes('<doc path="docs/no-desc.md"/>'));
+    assert.ok(!out.includes("(no description)"));
   });
 
   it("XML-escapes special characters in descriptions", () => {
@@ -116,8 +116,8 @@ describe("integration", () => {
       CLAUDE_PROJECT_DIR: tmpDir,
       CLAUDE_MICRODOC_GLOB: "docs/**/*.md,notes/**/*.md",
     });
-    assert.ok(out.includes("<path>docs/"));
-    assert.ok(out.includes("<path>notes/meeting.md</path>"));
+    assert.ok(out.includes('path="docs/'));
+    assert.ok(out.includes('path="notes/meeting.md"'));
   });
 
   it("traverses deeply nested directories", () => {
@@ -127,7 +127,7 @@ describe("integration", () => {
     );
 
     const out = runScript({ CLAUDE_PROJECT_DIR: tmpDir });
-    assert.ok(out.includes("<path>docs/a/b/c/deep.md</path>"));
+    assert.ok(out.includes('path="docs/a/b/c/deep.md"'));
     assert.ok(out.includes("Deep doc"));
   });
 });
@@ -164,7 +164,7 @@ describe("integration (fallback, non-git)", () => {
       CLAUDE_PROJECT_DIR: tmpDir,
       CLAUDE_MICRODOC_GLOB: "**/*.md",
     });
-    assert.ok(out.includes("<path>docs/readme.md</path>"));
+    assert.ok(out.includes('path="docs/readme.md"'));
     assert.ok(!out.includes("node_modules"));
   });
 });
@@ -208,7 +208,7 @@ describe("integration (git-aware)", () => {
       CLAUDE_PROJECT_DIR: tmpDir,
       CLAUDE_MICRODOC_GLOB: "**/*.md",
     });
-    assert.ok(out.includes("<path>docs/a.md</path>"));
+    assert.ok(out.includes('path="docs/a.md"'));
     assert.ok(!out.includes("vendor/b.md"));
   });
 
@@ -219,7 +219,7 @@ describe("integration (git-aware)", () => {
       CLAUDE_PROJECT_DIR: tmpDir,
       CLAUDE_MICRODOC_GLOB: "**/*.md",
     });
-    assert.ok(out.includes("<path>docs/new.md</path>"));
+    assert.ok(out.includes('path="docs/new.md"'));
     assert.ok(out.includes("New untracked"));
   });
 });
